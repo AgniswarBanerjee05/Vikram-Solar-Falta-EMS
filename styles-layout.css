@@ -1,0 +1,219 @@
+/* Layout fixes */
+.sidebar {
+  width: 240px;
+  padding: 1.5rem;
+  background: var(--surface-2);
+  border-right: 1px solid var(--border);
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.3s ease;
+  z-index: 100;
+}
+
+main {
+  margin-left: 240px;
+  padding: 2rem;
+  min-height: 100vh;
+  background: var(--surface-1);
+  transition: all 0.3s ease;
+}
+
+.brand {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  border-radius: 8px;
+  background: var(--surface-3);
+}
+
+.logo-img {
+  width: 100%;
+  max-width: 140px;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.brand-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-1);
+  text-align: center;
+}
+
+/* Navigation styling */
+nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+nav a {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  color: var(--text-2);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+nav a:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: var(--text-1);
+}
+
+nav a.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Header and Actions */
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.topbar h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--text-1);
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn:hover {
+  background: var(--surface-3);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary-dark);
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+/* KPI Cards Grid */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.kpi {
+  background: var(--surface-2);
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border);
+}
+
+.kpi:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.kpi-icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.kpi-label {
+  font-size: 0.875rem;
+  color: var(--text-2);
+  margin-bottom: 0.5rem;
+}
+
+.kpi-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+
+.kpi-trend {
+  font-size: 0.875rem;
+  color: var(--text-2);
+}
+
+/* Theme compatibility */
+body.light .sidebar {
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+}
+
+body.light .brand {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+body.light nav a {
+  color: #64748b;
+}
+
+body.light nav a:hover {
+  background: rgba(0, 0, 0, 0.05);
+  color: #1e293b;
+}
+
+body.light nav a.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Main content spacing */
+main {
+  margin-left: 240px;
+  padding: 2rem;
+  width: calc(100% - 240px);
+  min-height: 100vh;
+  background: var(--surface-1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+  
+  main {
+    margin-left: 200px;
+    padding: 1rem;
+  }
+  
+  .kpis {
+    grid-template-columns: 1fr;
+  }
+}

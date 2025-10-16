@@ -1,0 +1,251 @@
+SL.NO,LOCATION,PANEL NAME,"Meter ID
+ (Added by env)",Meter Name,Meter Serial No  (Added by env),Name of the equipment  meter connected,EM MAKE/MODEL NO,COMMUNICATION PORT AVAILABILTY,REMARKS,INTERNAL LOOPING STATUS (TBP/Yes/No),NEW METER INSTALLATION REQUIRED (YES/NO)
+1,33KV Consumer Room,CONSUMER BREAKER,ID # 1,Grid Incommer,1411,MAIN HT INCOMER,Secure,YES,None,NO,NO
+2,33 KV Room,33 KV HT PANEL,ID # 2,33 KV INCOMER,1412,33 KV PANEL  INCOMER,Schneider EM 6400,YES,None,NO,NO
+3,11 KV Room,11 KV PANEL,ID # 3,11 KV I/C,1413,11 KV INCOMER,Schneider EM 6400,YES,None,NO,NO
+4,11 KV Room,11 KV PANEL,ID # 4,11 KV O/G-1,1414,11 KV OUTGOING,Schneider EM 1200,YES,None,NO,NO
+5,11 KV Room,11 KV PANEL,ID # 5,11 KV O/G-2,1415,11 KV OUTGOING,Schneider EM 1200,YES,None,NO,NO
+6,LT PCC Room,PCC Phase-1,ID # 6,Grid incomer -1,1416,Phase -1  equipments,Schneider EM 6400NG,YES,None,NO,NO
+7,LT PCC Room,PCC Phase-1,ID # 7,Dg incomer-1,1417,DG power ,Schneider EM 6400,YES,None,NO,NO
+8,LT PCC Room,PCC Phase-2,ID # 8,Grid incomer -2,1418,Phase -1  equipments,Schneider EM 6400NG,YES,None,NO,NO
+9,LT PCC Room,PCC Phase-2,ID # 9,Dg incomer-2,1419,dg power ,Schneider EM 6400,YES,None,NO,NO
+10,LT PCC Room,82.5 KVA DG PANEL,ID # 10,82.5 KVA DG PANEL,1420,82.5 KVA DG INCOMER,Schneider EM 1200,YES,None,NO,NO
+11,LT PCC Room,400 KVA DG PANEL,ID # 11,400 KVA DG PANEL,1421,400 KVA DG INCOMER,Schneider EM 1200,YES,None,NO,NO
+12,LT PCC Room,810 KVA  DG PANEL,ID # 12,810 KVA  DG PANEL,1422,810 KVA  DG INCOMER,Schneider EM 1200,YES,None,NO,NO
+13,SHOP FLOOR ,UPS-1,ID # 13,UPS-1,1423,UPS-1  PHASE 1 PROCESS,Schneider EM 1200,YES,None,NO,NO
+14,SHOP FLOOR ,UPS-2,ID # 14,UPS-2,1424,UPS-2 PHASE 1 PROCESS,Schneider EM 1200,YES,None,NO,NO
+15,SHOP FLOOR ,UPS-3,ID # 15,UPS-3,1425,UPS-3 PHASE 1 PROCESS,Schneider EM 1200,YES,None,NO,NO
+16,SHOP FLOOR ,UPS-4,ID # 16,UPS-4,1426,UPS-4 PHASE 2 PROCESS,Schneider EM 1200,YES,None,NO,NO
+17,SHOP FLOOR ,UPS-5,ID # 17,UPS-5,1427,UPS-5 PHASE 2PROCESS,Schneider EM 1200,YES,None,NO,NO
+18,SHOP FLOOR ,UPS-6,ID # 18,UPS-6,1428,UPS-6 PHASE 2 PROCESS,Schneider EM 1200,YES,None,NO,NO
+19,SHOP FLOOR ,UPS-3,ID # 19,COMP-1,1429,Air Compressor -1 ,Schneider EM 1200,YES,None,NO,NO
+20,SHOP FLOOR ,UPS-3,ID # 20,COMP -2,1430,Air Compressor -2,Schneider EM 1200,YES,None,NO,NO
+21,SHOP FLOOR ,UPS-5,ID # 21,COMP-3,1431,Air Compressor -3,Schneider EM 1200,YES,None,NO,NO
+22,LT PCC Room,UPS-1,ID # 22,UPS-1,1432,UPS-1  I/P POWER SOURCE,Schneider EM 1200,YES,None,NO,YES
+23,LT PCC Room,UPS-2,ID # 23,UPS-2,1433,UPS-2 I/P POWER SOURCE,Schneider EM 1200,YES,None,NO,YES
+24,LT PCC Room,UPS-3,ID # 24,UPS-3,1434,UPS-3 I/P POWER SOURCE,Schneider EM 1200,YES,None,NO,YES
+25,LT PCC Room,UPS-4,ID # 25,UPS-4,1435,UPS-4 I/P POWER SOURCE,Schneider EM 1200,YES,None,NO,NO
+26,LT PCC Room,UPS-5,ID # 26,UPS-5,1436,UPS-5 I/P POWER SOURCE,Schneider EM 1200,YES,None,NO,NO
+27,LT PCC Room,UPS-6,ID # 27,UPS-6,1437,UPS-6 I/P POWER SOURCE,Schneider EM 1200,YES,None,NO,NO
+28,CHILLER ROOM,HVAC 1A,ID # 28,HVAC 1A,1438,"(AHU 1 &  CHILER PUMP- PRIMARY1,2 COND 1,2, SECONDARY 1,2, & COLLING TOWER 1",Schneider EM 1200,YES,None,NO,NO
+29,LT PCC Room,LTPCC,ID # 29,HVAC 1B,1439,"(CHILLER PUMP- PRIMARY 3,COND3 SECONDARY 3, COLLING TOWER 2,3)",Schneider EM 1200,YES,None,NO,NO
+30,LT PCC Room,HVAC 2A,ID # 30,HVAC 2A,1440,(AHU 4&5),Schneider EM 1200,YES,None,NO,NO
+31,LT PCC Room,HVAC 2B,ID # 31,HVAC 2B,1441,"(AHU G 1,G2,G3,G4,)",Schneider EM 1200,YES,None,NO,NO
+32,PROCESS AHU ROOM,HVAC 3A,ID # 32,HVAC 3A,1442,"(AHU 2,3)",Schneider EM 1200,YES,None,NO,NO
+33,LT PCC Room,HVAC 3B ,ID # 33,HVAC 3B ,1443,Phase -2 Fresh air & Exhaust Fan),Schneider EM 1200,YES,None,NO,NO
+34,FRESH AIR PANEL AREA,HVAC 4,ID # 34,HVAC 4,1444,"(FRESH AIR 1,2, & PACKING AREA FRESH AIR, 3,4, PRODUCTION FLOR EXGUST,TOILET AREA FRESH AIR",Schneider EM 1200,YES,None,NO,NO
+35,LT PCC Room,LT PCC-1,ID # 35,CHILLER -1,1445,CHILLER -1,Schneider EM 1200,YES,None,NO,NO
+36,LT PCC Room,LT PCC-2,ID # 36,CHILLER -2,1446,CHILLER -2,Schneider EM 1200,YES,None,NO,NO
+37,LT PCC Room,LT PCC-2,ID # 37,CHILLER -3,1447,CHILLER -3,Schneider EM 1200,YES,None,NO,NO
+38,NON AC ZONE,UPS-2,ID # 38,LAM-1,1448,LAMINATOR-1,Schneider EM 1200,YES,None,NO,YES
+39,NON AC ZONE,UPS-2,ID # 39,LAM-2,1449,LAMINATOR-2,Schneider EM 1200,YES,None,NO,NO
+40,NON AC ZONE,UPS-3,ID # 40,LAM-3,1450,LAMINATOR-3,Schneider EM 1200,YES,None,NO,NO
+41,NON AC ZONE,UPS-1,ID # 41,LAM-4A,1451,BURKLE LAMINATOR-A,Schneider EM 1200,YES,None,NO,YES
+42,NON AC ZONE,UPS-1,ID # 42,LAM-4B,1452,BURKLE LAMINATOR-B,Schneider EM 1200,YES,None,NO,NO
+43,NON AC ZONE,UPS-1,ID # 43,LAM-4C,1453,BURKLE LAMINATOR-C,Schneider EM 1200,YES,None,NO,NO
+44,NON AC ZONE,UPS-4,ID # 44,LAM-4,1454,LAMINATOR-4  PHASE 2,Schneider EM 1200,YES,None,NO,NO
+45,NON AC ZONE,UPS-5,ID # 45,LAM-5,1455,LAMINATOR-5 PHASE 2,Schneider EM 1200,YES,None,NO,NO
+46,NON AC ZONE,UPS-6,ID # 46,LAM-6,1456,LAMINATOR-6 PHASE 2,Schneider EM 1200,YES,None,NO,NO
+47,NON AC ZONE,UPS-4,ID # 47,LAM-7,1457,LAMINATOR-7 PHASE 2,Schneider EM 1200,YES,None,NO,NO
+48,PHASE-1,UPS-1,ID # 48,STRINGER -1,1458,Phase 1 /STRINGER -1,Schneider EM 1200,YES,None,NO,NO
+49,PHASE-1,UPS-2,ID # 49,STRINGER- 2,1459,Phase 1 /STRINGER -2,Schneider EM 1200,YES,None,NO,NO
+50,PHASE-1,UPS-3,ID # 50,STRINGER -3,1460,Phase 1 /STRINGER -3,Schneider EM 1200,YES,None,NO,NO
+51,PHASE-2,UPS-4,ID # 51,STRINGER -4A,1461,Phase 2 STRINGER -1,Schneider EM 1200,YES,None,NO,NO
+52,PHASE-2,UPS-4,ID # 52,STRINGER -4B,1462,Phase 2 STRINGER -1,Schneider EM 1200,YES,None,NO,NO
+53,PHASE-2,UPS-4,ID # 53,LAYUP-4,1463,Phase 2 STRINGER -1,Schneider EM 1200,RS485,None,NO,NO
+54,PHASE-2,UPS-4,ID # 54,ROBOT -4,1464,Phase 2 STRINGER -1,Schneider EM 1200,RS485,None,NO,NO
+55,PHASE-2,UPS-5,ID # 55,STRINGER -5A,1465,Phase 2 STRINGER -2,Schneider EM 1200,RS485,None,NO,NO
+56,PHASE-2,UPS-5,ID # 56,STRINGER -5B,1466,Phase 2 STRINGER -2,Schneider EM 1200,RS485,None,NO,NO
+57,PHASE-2,UPS-5,ID # 57,LAYUP-5,1467,Phase 2 STRINGER -2,Schneider EM 1200,RS485,None,NO,NO
+58,PHASE-2,UPS-5,ID # 58,ROBOT -5,1468,Phase 2 STRINGER -2,Schneider EM 1200,RS485,None,NO,NO
+59,PHASE-2,UPS-6,ID # 59,STRINGER -6A,1469,Phase 2 STRINGER -3,Schneider EM 1200,RS485,None,NO,NO
+60,PHASE-2,UPS-6,ID # 60,STRINGER -6B,1470,Phase 2 STRINGER -3,Schneider EM 1200,RS485,None,NO,NO
+61,PHASE-2,UPS-6,ID # 61,LAYUP-6,1471,Phase 2 STRINGER -3,Schneider EM 1200,RS485,None,NO,NO
+62,PHASE-2,UPS-6,ID # 62,ROBOT -6,1472,Phase 2 STRINGER -3,Schneider EM 1200,RS485,None,NO,NO
+63,DG area,UPS-3,ID # 63,STRINGER -7,1473,Phase 1 /STRINGER -4,Schneider EM 1200,RS485,None,NO,YES
+64,DG area,UPS-3,ID # 64,STRINGER -8,1474,Phase 1 /STRINGER -5,Schneider EM 1200,RS485,None,NO,YES
+65,DG area,UPS-2,ID # 65,LASER CUTTING M/C,1475,Phase 1  EXTENSION AREA,Schneider EM 1200,RS485,None,NO,YES
+66,2ND FLOOR MAN LINE,UPS-3,ID # 66,MANUAL - LINE ,1476,SMALL MODULE ASSEMBLY,Schneider EM 1200,RS485,None,NO,NO
+67,LT PCC ROOM,LTPCC-2,ID # 67,LIFT - 1,1477,WEST side lift),Schneider EM 1200,RS485,None,NO,NO
+68,LT PCC ROOM,LTPCC-2,ID # 68,LIFT- 2,1478,(EAST  SIDE LIFT,Schneider EM 1200,RS485,None,NO,NO
+69,LT PCC ROOM,FA MEZ /EPDB-2,ID # 69,LIFT- 3,1479,(Passenger Lift),Schneider EM 1200,RS485,None,NO,NO
+70,,,ID # 70,LIGHTING DB PHASE 1,1480,,Schneider EM 1200,RS485,None,NO,NO
+71,LT PCC ROOM,LTPCC-1,ID # 71,LIGHTING DB UTILITY AREA,1481,LIGHTNG,Schneider EM 1200,RS485,None,NO,NO
+72,LT PCC ROOM,LTPCC-1,ID # 72,EMERGENCY PCC,1482,"( Softner Plant , Finish Godown, LT Room Ex. Fan, Project DB, LDB Ph -1)",Schneider EM 1200,RS485,None,NO,NO
+73,LT PCC ROOM,LTPCC-2,ID # 73,MLDB-1,1483,AHU MLDB ,Schneider EM 1200,RS485,,,
+74,LT PCC ROOM,LTPCC-2,ID # 74,MLDB-2,1484,Fresh air MLDB),Schneider EM 1200,RS485,None,NO,NO
+75,LT PCC ROOM,LTPCC-2,ID # 75,SPDB-1,1485,FRESH AIR SPDB,Schneider EM 1200,RS485,None,NO,NO
+76,LT PCC ROOM,LTPCC-2,ID # 76,SPDB-2,1486,AHU SPDB,Schneider EM 1200,RS485,,,
+77,STP PLANT,STP PLANT,ID # 77,STP PLANT,1487,STP,Schneider EM 1200,RS485,None,NO,NO
+78,LT PCC ROOM,Capacitor Panel,ID # 78,Capacitor Panel(Phase 2),1488,Capacitor Panel,Schneider EM 1200,RS485,None,NO,NO
+79,LT PCC ROOM,Capacitor Panel,ID # 79,Capacitor Panel(Phase 1),1489,Capacitor Panel,Schneider EM 1200,RS485,None,NO,YES
+80,Compressor Room,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+,,,,,,,,,,,
+MCC Panel 1 - Plant Room,,,,,,,,,,,
+1,Cooling Tower,250 TR,7.5,1,,,,,,,
+2,Primary Pump,500 USGPM,5.5,1,,,,,,,
+3,Secondary Pump,500 USGPM,11,2,,,,,,,
+4,Condenser Pump,750 USGPM,15,1,,,,,,,
+,Sub Total for above,,,,,,,,,,
+,,,,,,,,,,,
+MCC Panel 2 - Terrace LS,,,,,,,,,,,
+1,Cabinet Type Fresh Air Fan,25000 CFM,5.5 x 2,4,,,,,,,
+2,Cabinet Type Fresh Air Fan,22000 CFM,11,2,,,,,,,
+3,Cabinet Type Fresh Air Fan,15000 CFM,7.5,2,,,,,,,
+4,Cabinet Type Fresh Air Fan,20000 CFM,11,2,,,,,,,
+5,Axial Flow Fan,21000 CFM,3.7,9,,,,,,,
+6,Axial Flow Fan (Existing),12000 CFM,2.2,1,,,,,,,
+,Sub Total for above,,,,,,,,,,
+,,,,,,,,,,,
+MCC Panel 2 - Terrace LS,,,,,,,,,,,
+1,Air Handling Units,8200 CFM,5.5,4,,,,,,,
+2,Cabinet Type Fresh Air Fan(Existing),36500 CFM,15,1,,,,,,,
+3,Cabinet Type Fresh Air Fan,15000 CFM,7.5,2,,,,,,,
+4,Cabinet Type Fresh Air Fan(Existing),12000 CFM,5.5,2,,,,,,,
+5,Axial Flow Fan,21000 CFM,3.7,1,,,,,,,
+6,Axial Flow Fan(Existing),18250 CFM,3.7,2,,,,,,,
+,Sub Total for above,,,,,,,,,,
+,,,,,,,,,,,
+VFD Panel,,,,,,,,,,,
+1,Air Handling Units at Ground Level,10000 CFM,7.5,1,,,,,,,
+2,Cabinet Type Ex. Air Fan at Ground Level,11000 CFM,7.5,2,,,,,,,
+,Sub Total for above,,,,,,,,,,
+,Total for above,,,,,,,,,,
