@@ -1,0 +1,33 @@
+{
+  "name": "falta_ems_prototype",
+  "version": "1.0.0",
+  "description": "A static, zero-backend prototype that renders a *beautiful* dashboard for the **Vikram Solar — Falta** plant using the meter inventory inside your ZIP files.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "ts-node src/index.ts",
+    "convert:csv": "ts-node src/index.ts convert-csv",
+    "convert:excel": "ts-node src/index.ts convert-excel",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgniswarBanerjee05/Vikram-Solar-Falta-EMS.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/AgniswarBanerjee05/Vikram-Solar-Falta-EMS/issues"
+  },
+  "homepage": "https://github.com/AgniswarBanerjee05/Vikram-Solar-Falta-EMS#readme",
+  "dependencies": {
+    "papaparse": "^5.5.3",
+    "xlsx": "^0.18.5"
+  },
+  "devDependencies": {
+    "@types/node": "^24.8.1",
+    "@types/papaparse": "^5.3.16",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
+  }
+}
