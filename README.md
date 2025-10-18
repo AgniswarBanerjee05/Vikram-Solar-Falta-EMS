@@ -1,54 +1,60 @@
-# Falta EMS Prototype Frontend
+# Falta EMS Dashboard
 
-A static, zero-backend prototype that renders a dashboard for the **Vikram Solar – Falta** plant using the meter inventory inside your ZIP files. The UI still consumes a local JSON payload (`data/data.json`), but that payload is now produced with a Node.js + TypeScript toolkit.
+Modern React + TypeScript version of the Falta Energy Metering dashboard. The UI is now a responsive single-page application powered by Vite, Tailwind CSS, and Chart.js, backed by a local JSON data source (`public/data/data.json`). Replace that JSON (or point the fetch call to an API) to plug the dashboard into live EMS data.
 
-## What's Inside
-- `index.html` – Dashboard UI (KPI cards, charts, searchable table)
-- `styles*.css` – Styling variants, including the layout that ships by default
-- `app.js` – Fetches `data/data.json`, draws charts (Chart.js via CDN), filters & CSV export
-- `data/data.json` – Aggregated dataset generated from the meter list
-- `src/` – TypeScript sources that replace the original Python conversion scripts
+## Features
+- React components for sidebar navigation, KPI cards, charts, and searchable data tables.
+- Tailwind CSS styling with dark/light theme toggle stored in `localStorage`.
+- Chart.js visualisations (models mix, comms availability, top locations, top panels) rendered via `react-chartjs-2`.
+- CSV export for either table view (meters or panels) using Papa Parse.
+- Mobile-first layout: collapsible sidebar, responsive charts, and touch friendly tables.
 
-## Data Pipeline (Node + TypeScript)
-
-Install dependencies once:
-
+## Getting Started
 ```bash
+# install dependencies
 npm install
-```
 
-Generate `data/data.json` straight from the provided `Data.csv`:
+# run the Vite dev server (http://localhost:5173)
+npm run dev
 
-```bash
-npm run convert:csv
-```
-
-If you receive an updated Excel workbook, convert it first and regenerate JSON:
-
-```bash
-npm run convert:excel -- --input Data.xlsx --output Data.csv
-npm run convert:csv
-```
-
-Type-check and emit JavaScript builds to `dist/` with:
-
-```bash
+# type-check and build production assets
 npm run build
+
+# preview the production build locally
+npm run preview
 ```
 
-The utilities use Papa Parse and SheetJS (`xlsx`) under the hood, so you can automate them via CI or extend them to handle new tabs/columns as needed.
+The development server automatically reloads on code changes. The production build emits static assets under `dist/`.
 
-## Running the Dashboard
-1. Open the folder in VS Code (or your editor of choice).
-2. Install the **Live Server** extension (Ritwick Dey) if you need a quick dev server.
-3. Right-click `index.html` → **Open with Live Server**.
-   - This serves the site at `http://127.0.0.1:5500` (or similar), which is required so the browser can `fetch` the local JSON.
+## Data
+- Sample data lives at `public/data/data.json`. A fetch call in `useDashboardData` loads it at runtime.
+- Swap in your own JSON file (keep the same shape) or adjust the fetch URL to target an API or proxy endpoint.
+- Legacy CSV/XLSX conversion scripts have been removed from the build; bring them back if you still need automated exports.
 
-Opening `index.html` directly via the filesystem will usually block `fetch('data/data.json')`; use a lightweight server to avoid that.
+## Project Structure
+```
+public/                 # Static assets served as-is
+  data/data.json
+  images/vikram-solar-logo.png
+src/
+  components/           # Layout, charts, tables, shared UI
+  hooks/                # Data loading, theme, scroll spy
+  lib/                  # Chart.js registration and helpers
+  types/                # Dashboard data contracts
+  utils/                # CSV exporter, search helpers
+  App.tsx               # Dashboard composition
+  main.tsx              # Entry point
+tailwind.config.ts      # Tailwind theme overrides
+```
 
-## Future Integration
-- Replace `fetch('data/data.json')` in `app.js` with calls to MyEMS API endpoints (e.g., `/api/meters`, `/api/spaces`).
-- Or insert a thin Node proxy that maps `/api` to the upstream EMS and keep the UI code unchanged.
-- Time-series charts can be added easily once live EMS data (kWh/kW) is available; the current focus is inventory analytics.
+## Tech Stack
+- React 18 with TypeScript
+- Vite 5 build tooling
+- Tailwind CSS 3 for utility-first styling
+- Chart.js 4 + react-chartjs-2 for visualisations
+- Papa Parse for CSV export
 
-(c) Prototype generated for Vikram Solar Falta.
+## Next Ideas
+1. Connect `useDashboardData` to an EMS API endpoint and add authentication.
+2. Expand the chart suite with time series (power, energy) once telemetry is available.
+3. Persist filters, active tabs, and theme selection per user profile.
