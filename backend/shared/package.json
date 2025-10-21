@@ -1,0 +1,13 @@
+{
+  "name": "falta-ems-backend-shared",
+  "version": "1.0.0",
+  "private": true,
+  "type": "commonjs",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^9.4.3",
+    "jsonwebtoken": "^9.0.2",
+    "nodemailer": "^7.0.9",
+    "zod": "^3.23.8"
+  }
+}

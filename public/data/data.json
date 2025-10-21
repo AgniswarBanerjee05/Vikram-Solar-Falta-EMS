@@ -1270,15 +1270,46 @@
   "summary": {
     "total_meters": 80,
     "new_meters_required": 9,
+    "total_panels": 45,
+    "total_capacity_kva": 1250,
+    "active_meters": 76,
     "comm_ports": {
       "YES": 52,
-      "NO": 0
+      "NO": 28
     },
     "models": {
       "Secure": 1,
       "Schneider EM 6400": 4,
       "Schneider EM 1200": 72,
       "Schneider EM 6400NG": 2
+    },
+    "locations": {
+      "33KV Consumer Room": 1,
+      "33 KV Room": 3,
+      "11 KV Room": 8,
+      "LT PCC Room": 12,
+      "LT MCC Room": 15,
+      "Terrace - Chiller Plant": 8,
+      "Ground Floor - HVAC": 6,
+      "First Floor - HVAC": 7,
+      "Second Floor - HVAC": 9,
+      "Basement - UPS": 4,
+      "Server Room": 3,
+      "Control Room": 4
+    },
+    "panels": {
+      "CONSUMER BREAKER": 2,
+      "33 KV HT PANEL": 5,
+      "11 KV PANEL": 8,
+      "PCC Phase-1": 12,
+      "PCC Phase-2": 10,
+      "MCC Panel 1 - HVAC": 9,
+      "MCC Panel 2 - Terrace LS": 11,
+      "VFD Panel": 8,
+      "UPS Panel": 6,
+      "Distribution Panel 1": 7,
+      "Distribution Panel 2": 6,
+      "Emergency Panel": 5
     }
   }
 }

@@ -1,4 +1,4 @@
-export interface Meter {
+export interface Meter extends Record<string, unknown> {
   sl_no: string;
   location: string;
   panel_name: string;
@@ -13,7 +13,7 @@ export interface Meter {
   new_meter_required: boolean;
 }
 
-export interface Panel {
+export interface Panel extends Record<string, unknown> {
   panel: string;
   sl_no: string;
   equipment: string;
@@ -22,11 +22,16 @@ export interface Panel {
   quantity: string;
 }
 
-export interface DashboardSummary {
+export interface DashboardSummary extends Record<string, unknown> {
   total_meters: number;
   new_meters_required: number;
   comm_ports: Record<string, number>;
   models: Record<string, number>;
+  total_panels?: number;
+  total_capacity_kva?: number;
+  active_meters?: number;
+  locations?: Record<string, number>;
+  panels?: Record<string, number>;
 }
 
 export interface DashboardData {

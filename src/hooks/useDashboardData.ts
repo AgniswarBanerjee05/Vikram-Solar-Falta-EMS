@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+﻿import { useEffect, useMemo, useState } from 'react';
 import type { DashboardData, DashboardSummary, Meter, Panel } from '../types/dashboard';
 
 interface DashboardResponse {
@@ -14,6 +14,18 @@ const EMPTY_SUMMARY: DashboardSummary = {
   models: {}
 };
 
+const buildDataUrl = () => {
+  const base = import.meta.env.BASE_URL ?? '/';
+  if (!window?.location) {
+    return '/data/data.json';
+  }
+  const trimmed = base === './' ? '/' : base;
+  const ensured = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  const normalized = ensured.endsWith('/') ? ensured : `${ensured}/`;
+  const url = new URL(`${normalized.replace(/\/+/g, '/')}data/data.json`, window.location.origin);
+  return url.toString();
+};
+
 export function useDashboardData() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
@@ -27,18 +39,7 @@ export function useDashboardData() {
         setLoading(true);
         setError(null);
 
-        // ✅ Build URL manually to avoid "Invalid base URL" issues
-        // Handles both localhost and GitHub Pages environments
-        const base =
-          (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
-            ? import.meta.env.BASE_URL
-            : '/Vikram-Solar-Falta-EMS/';
-
-        // Ensure trailing slash only once, then build absolute URL
-        const dataUrl = `${window.location.origin}${base.replace(/\/$/, '')}/data/data.json`;
-
-        console.log('📦 Loading dashboard data from:', dataUrl); // optional debug log
-
+        const dataUrl = buildDataUrl();
         const response = await fetch(dataUrl);
         if (!response.ok) {
           throw new Error(`Failed to load data (${response.status})`);
@@ -59,7 +60,7 @@ export function useDashboardData() {
       } catch (err) {
         if (isMounted) {
           setError(err instanceof Error ? err.message : 'Unknown error');
-          console.error('❌ Failed to load dashboard data:', err);
+          console.error('Failed to load dashboard data:', err);
         }
       } finally {
         if (isMounted) {
