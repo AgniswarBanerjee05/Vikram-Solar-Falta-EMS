@@ -1,8 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import type { DashboardData, DashboardSummary, Meter, Panel } from '../types/dashboard';
 
-const DATA_URL = '/data/data.json';
-
 interface DashboardResponse {
   meters?: Meter[];
   panels?: Panel[];
@@ -28,7 +26,20 @@ export function useDashboardData() {
       try {
         setLoading(true);
         setError(null);
-        const response = await fetch(DATA_URL);
+
+        // ✅ Build URL manually to avoid "Invalid base URL" issues
+        // Handles both localhost and GitHub Pages environments
+        const base =
+          (import.meta.env.BASE_URL && import.meta.env.BASE_URL !== '/')
+            ? import.meta.env.BASE_URL
+            : '/Vikram-Solar-Falta-EMS/';
+
+        // Ensure trailing slash only once, then build absolute URL
+        const dataUrl = `${window.location.origin}${base.replace(/\/$/, '')}/data/data.json`;
+
+        console.log('📦 Loading dashboard data from:', dataUrl); // optional debug log
+
+        const response = await fetch(dataUrl);
         if (!response.ok) {
           throw new Error(`Failed to load data (${response.status})`);
         }
@@ -48,6 +59,7 @@ export function useDashboardData() {
       } catch (err) {
         if (isMounted) {
           setError(err instanceof Error ? err.message : 'Unknown error');
+          console.error('❌ Failed to load dashboard data:', err);
         }
       } finally {
         if (isMounted) {

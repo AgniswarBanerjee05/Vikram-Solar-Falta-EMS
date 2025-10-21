@@ -1,5 +1,5 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import clsx from 'clsx';
 import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
@@ -54,6 +54,51 @@ const panelCsvColumns: Array<CsvColumn<Panel>> = [
 const MOBILE_BREAKPOINT = 1024;
 const UNKNOWN_LOCATION_LABEL = 'Unknown Location';
 const UNASSIGNED_PANEL_LABEL = 'Unassigned Panel';
+const SECTION_SCROLL_OFFSET = 160;
+
+const getNormalizedBasePath = () => {
+  const base = import.meta.env.BASE_URL ?? '/';
+  if (base === '/' || base === './') {
+    return '';
+  }
+  return base.replace(/\/+$/, '');
+};
+
+const buildSectionHref = (sectionId: string) => {
+  const basePath = getNormalizedBasePath();
+  const joined = [basePath, sectionId].filter(Boolean).join('/');
+  const candidate = joined.startsWith('/') ? joined : `/${joined}`;
+  return candidate || '/';
+};
+
+const normalizePathname = (value: string) => {
+  if (!value) {
+    return '/';
+  }
+  const trimmed = value.replace(/\/+$/, '');
+  return trimmed.length ? trimmed : '/';
+};
+
+const resolveSectionFromPathname = (
+  pathname: string,
+  availableSections: ReadonlyArray<{ id: string }>
+) => {
+  const basePath = getNormalizedBasePath();
+  let path = pathname;
+
+  if (basePath && path.startsWith(basePath)) {
+    path = path.slice(basePath.length);
+  }
+
+  path = path.replace(/^\/+/, '');
+  const [firstSegment] = path.split('/');
+
+  return (
+    availableSections.find((section) => section.id === firstSegment)?.id ??
+    availableSections[0]?.id ??
+    ''
+  );
+};
 
 const sanitizeLabel = (value: string | null | undefined, fallback: string) => {
   const trimmed = (value ?? '').trim();
@@ -95,6 +140,7 @@ export default function App() {
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' ? window.innerWidth >= MOBILE_BREAKPOINT : false
   );
+  const scrollContainerRef = useRef<HTMLDivElement | null>(null);
 
   const sanitizedMeters = useMemo(() => sanitizeMeters(meters), [meters]);
 
@@ -116,13 +162,29 @@ export default function App() {
     if (typeof document === 'undefined') {
       return;
     }
-    document.body.style.overflow = !isDesktop && sidebarOpen ? 'hidden' : '';
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
     return () => {
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
+    };
+  }, []);
+
+  useEffect(() => {
+    const container = scrollContainerRef.current;
+    if (!container) {
+      return;
+    }
+    container.style.overflowY = !isDesktop && sidebarOpen ? 'hidden' : 'auto';
+    return () => {
+      container.style.overflowY = 'auto';
     };
   }, [isDesktop, sidebarOpen]);
 
-  const activeSection = useScrollSpy(sections.map((section) => section.id));
+  const activeSection = useScrollSpy(
+    sections.map((section) => section.id),
+    SECTION_SCROLL_OFFSET,
+    scrollContainerRef
+  );
 
   const filteredMeters = useMemo(
     () => sanitizedMeters.filter((meter) => matchesSearchTerm(meter, searchTerm)),
@@ -156,13 +218,92 @@ export default function App() {
       .slice(0, 12);
   }, [sanitizedMeters]);
 
-  const handleNavigate = (sectionId: string) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  const scrollToSection = useCallback(
+    (sectionId: string, behavior: ScrollBehavior = 'smooth') => {
+      const element = document.getElementById(sectionId);
+      if (!element) {
+        return;
+      }
+
+      const container = scrollContainerRef.current;
+      if (container) {
+        const containerRect = container.getBoundingClientRect();
+        const elementRect = element.getBoundingClientRect();
+        const offsetWithinContainer =
+          elementRect.top - containerRect.top + container.scrollTop - SECTION_SCROLL_OFFSET;
+        container.scrollTo({ top: Math.max(offsetWithinContainer, 0), behavior });
+        return;
+      }
+
+      if (typeof window !== 'undefined') {
+        const absoluteTop = element.getBoundingClientRect().top + window.scrollY;
+        const target = Math.max(absoluteTop - SECTION_SCROLL_OFFSET, 0);
+        window.scrollTo({ top: target, behavior });
+      }
+    },
+    [scrollContainerRef]
+  );
+
+  const updateHistoryForSection = useCallback(
+    (sectionId: string, { replace = false }: { replace?: boolean } = {}) => {
+      if (typeof window === 'undefined') {
+        return;
+      }
+      const targetPath = buildSectionHref(sectionId);
+      const currentPath = normalizePathname(window.location.pathname);
+      const normalizedTarget = normalizePathname(targetPath);
+      if (currentPath === normalizedTarget) {
+        return;
+      }
+      const state = { sectionId };
+      if (replace) {
+        window.history.replaceState(state, '', targetPath);
+      } else {
+        window.history.pushState(state, '', targetPath);
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (typeof window === 'undefined') {
+      return;
     }
+
+    const initialSection = resolveSectionFromPathname(window.location.pathname, sections);
+    if (initialSection) {
+      updateHistoryForSection(initialSection, { replace: true });
+      requestAnimationFrame(() => {
+        scrollToSection(initialSection, 'auto');
+      });
+    }
+
+    const handlePopState = () => {
+      const targetSection = resolveSectionFromPathname(window.location.pathname, sections);
+      if (targetSection) {
+        scrollToSection(targetSection);
+      }
+    };
+
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, [scrollToSection, updateHistoryForSection]);
+
+  useEffect(() => {
+    if (!activeSection) {
+      return;
+    }
+    updateHistoryForSection(activeSection, { replace: true });
+  }, [activeSection, updateHistoryForSection]);
+
+  const handleNavigate = (sectionId: string) => {
+    scrollToSection(sectionId);
+    updateHistoryForSection(sectionId);
     if (!isDesktop) {
       setSidebarOpen(false);
+      requestAnimationFrame(() => {
+        scrollToSection(sectionId);
+      });
     }
   };
 
@@ -180,18 +321,13 @@ export default function App() {
       : `Showing ${filteredPanels.length} of ${panels.length} panel entries`;
 
   return (
-    <div className="relative min-h-screen overflow-hidden pb-16 text-slate-900 transition dark:text-slate-100">
-      <div className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute -top-40 -left-32 h-96 w-96 rounded-full bg-brand-400/25 blur-[140px] dark:bg-brand-300/15" />
-        <div className="absolute -bottom-24 right-[-10%] h-[520px] w-[520px] rounded-full bg-indigo-400/20 blur-[160px] dark:bg-indigo-500/15" />
-        <div className="absolute top-1/3 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[130px] dark:bg-cyan-400/10" />
-      </div>
-
+    <div className="relative h-screen overflow-hidden text-slate-900 transition dark:text-slate-100">
       <Sidebar
         isOpen={sidebarOpen}
         sections={sections as unknown as Array<{ id: string; label: string }>}
         activeSection={activeSection}
         onNavigate={handleNavigate}
+        getSectionHref={buildSectionHref}
       />
 
       {!isDesktop && sidebarOpen && (
@@ -204,11 +340,18 @@ export default function App() {
       )}
 
       <div
+        ref={scrollContainerRef}
         className={clsx(
-          'relative z-10 flex min-h-screen flex-col transition-[padding-left] duration-300 ease-in-out lg:pl-0',
+          'relative z-10 flex h-full flex-col overflow-y-auto transition-[padding-left] duration-300 ease-in-out lg:pl-0',
           isDesktop && sidebarOpen && 'lg:pl-72'
         )}
       >
+        <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[320%]">
+          <div className="absolute -top-40 -left-32 h-96 w-96 rounded-full bg-brand-400/25 blur-[140px] dark:bg-brand-300/15" />
+          <div className="absolute -bottom-24 right-[-10%] h-[520px] w-[520px] rounded-full bg-indigo-400/20 blur-[160px] dark:bg-indigo-500/15" />
+          <div className="absolute top-1/3 left-1/2 h-72 w-72 -translate-x-1/2 rounded-full bg-cyan-300/10 blur-[130px] dark:bg-cyan-400/10" />
+        </div>
+
         <Topbar
           onToggleSidebar={() => setSidebarOpen((open) => !open)}
           onDownloadCsv={handleDownloadCsv}
@@ -217,7 +360,7 @@ export default function App() {
           isSidebarOpen={sidebarOpen}
         />
 
-        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 pb-12 pt-8 sm:px-6 lg:mx-0 lg:px-10 xl:px-14">
+        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 pb-16 pt-8 sm:px-6 lg:mx-0 lg:px-10 xl:px-14">
           <section id="overview" className="space-y-8">
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <KpiCard

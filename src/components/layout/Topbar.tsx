@@ -17,7 +17,7 @@ export const Topbar: FC<TopbarProps> = ({
   isSidebarOpen
 }) => {
   return (
-    <header className="sticky top-0 z-30 border-b border-white/10 bg-white/70 backdrop-blur-2xl transition dark:border-white/5 dark:bg-slate-950/40">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-white/70 backdrop-blur-2xl transition dark:border-white/5 dark:bg-slate-950/40">
       <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6 lg:mx-0 lg:flex-nowrap lg:justify-between lg:px-10 xl:px-12">
         <div className="flex min-w-0 flex-1 items-center gap-3">
           <button
