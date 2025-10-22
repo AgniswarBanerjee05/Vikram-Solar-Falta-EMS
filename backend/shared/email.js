@@ -1,47 +1,63 @@
 const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
 /**
- * Create email transporter based on environment configuration
- * Supports Gmail, custom SMTP, and test accounts for development
+ * Determine which email service to use based on environment variables
+ * Priority: 1. Resend API (RESEND_API_KEY), 2. SMTP (EMAIL_USER/EMAIL_PASSWORD)
  */
-function createTransporter() {
+function getEmailService() {
+  const resendApiKey = process.env.RESEND_API_KEY;
   const emailUser = process.env.EMAIL_USER;
   const emailPass = process.env.EMAIL_PASSWORD;
-  const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com';
-  const emailPort = process.env.EMAIL_PORT || 587;
-  const emailSecure = process.env.EMAIL_SECURE === 'true';
 
-  // If no credentials provided, log warning and return null
-  if (!emailUser || !emailPass) {
-    console.warn('Email credentials not configured. Emails will not be sent.');
-    console.warn('Set EMAIL_USER and EMAIL_PASSWORD environment variables to enable email functionality.');
-    return null;
+  // Option 1: Use Resend API (recommended for reliability)
+  if (resendApiKey) {
+    try {
+      const resend = new Resend(resendApiKey);
+      console.log('✅ Email service configured: Resend API');
+      return { type: 'resend', client: resend };
+    } catch (error) {
+      console.error('Failed to initialize Resend:', error);
+    }
   }
 
-  try {
-    const transporter = nodemailer.createTransport({
-      host: emailHost,
-      port: parseInt(emailPort, 10),
-      secure: emailSecure, // true for 465, false for other ports
-      auth: {
-        user: emailUser,
-        pass: emailPass
-      }
-    });
+  // Option 2: Use SMTP (fallback)
+  if (emailUser && emailPass) {
+    const emailHost = process.env.EMAIL_HOST || 'smtp.gmail.com';
+    const emailPort = process.env.EMAIL_PORT || 587;
+    const emailSecure = process.env.EMAIL_SECURE === 'true';
 
-    console.log(`Email transporter configured with ${emailHost}:${emailPort}`);
-    return transporter;
-  } catch (error) {
-    console.error('Failed to create email transporter:', error);
-    return null;
+    try {
+      const transporter = nodemailer.createTransport({
+        host: emailHost,
+        port: parseInt(emailPort, 10),
+        secure: emailSecure,
+        auth: {
+          user: emailUser,
+          pass: emailPass
+        }
+      });
+      console.log(`✅ Email service configured: SMTP (${emailHost}:${emailPort})`);
+      return { type: 'smtp', client: transporter };
+    } catch (error) {
+      console.error('Failed to create SMTP transporter:', error);
+    }
   }
+
+  // No email service configured
+  console.warn('⚠️  Email service not configured. Emails will not be sent.');
+  console.warn('Configure either:');
+  console.warn('  1. RESEND_API_KEY for Resend API (recommended)');
+  console.warn('  2. EMAIL_USER and EMAIL_PASSWORD for SMTP');
+  return { type: 'none', client: null };
 }
 
-// Initialize transporter once
-const transporter = createTransporter();
+// Initialize email service once
+const emailService = getEmailService();
 
 /**
  * Send email with HTML template
+ * Supports both Resend API and SMTP
  * @param {Object} options - Email options
  * @param {string} options.to - Recipient email address
  * @param {string} options.subject - Email subject
@@ -50,27 +66,98 @@ const transporter = createTransporter();
  * @returns {Promise<Object|null>} - Send result or null if email disabled
  */
 async function sendEmail({ to, subject, html, text }) {
-  if (!transporter) {
-    console.log(`[EMAIL DISABLED] Would send to ${to}: ${subject}`);
+  const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER || 'noreply@vikramsolar.com';
+  const fromName = process.env.EMAIL_FROM_NAME || 'Vikram Solar - Falta EMS';
+
+  // Email service not configured
+  if (emailService.type === 'none') {
+    console.log(`📧 [EMAIL DISABLED] Would send to ${to}: ${subject}`);
+    console.log(`   From: ${fromName} <${fromEmail}>`);
     return null;
   }
 
-  const fromEmail = process.env.EMAIL_FROM || process.env.EMAIL_USER;
-  const fromName = process.env.EMAIL_FROM_NAME || 'Vikram Solar - Falta EMS';
-
   try {
-    const info = await transporter.sendMail({
-      from: `"${fromName}" <${fromEmail}>`,
-      to,
-      subject,
-      text,
-      html
-    });
+    let result;
 
-    console.log(`Email sent to ${to}: ${info.messageId}`);
-    return info;
+    // Send via Resend API
+    if (emailService.type === 'resend') {
+      // For Resend, use verified domain or onboarding@resend.dev for testing
+      // If EMAIL_FROM is not verified, fall back to Resend's test domain
+      let resendFrom = fromEmail;
+      
+      // Check if using an unverified domain, use Resend's test domain instead
+      if (fromEmail && !fromEmail.includes('@resend.dev')) {
+        console.log(`⚠️  Using test domain for email. To send from ${fromEmail}, verify your domain at https://resend.com/domains`);
+        resendFrom = `${fromName} <onboarding@resend.dev>`;
+      } else {
+        resendFrom = `${fromName} <${fromEmail}>`;
+      }
+      
+      console.log(`📧 Sending email via Resend API...`);
+      console.log(`   From: ${resendFrom}`);
+      console.log(`   To: ${to}`);
+      console.log(`   Subject: ${subject}`);
+      
+      result = await emailService.client.emails.send({
+        from: resendFrom,
+        to: [to],
+        subject,
+        html,
+        text: text || html.replace(/<[^>]*>/g, '') // Strip HTML if no text provided
+      });
+      
+      if (result && result.data && result.data.id) {
+        console.log(`✅ Email sent via Resend to ${to}: ${result.data.id}`);
+      } else if (result && result.id) {
+        console.log(`✅ Email sent via Resend to ${to}: ${result.id}`);
+      } else {
+        console.log(`✅ Email sent via Resend to ${to}`);
+        console.log(`   Response:`, JSON.stringify(result));
+      }
+      return result;
+    }
+
+    // Send via SMTP
+    if (emailService.type === 'smtp') {
+      result = await emailService.client.sendMail({
+        from: `"${fromName}" <${fromEmail}>`,
+        to,
+        subject,
+        text,
+        html
+      });
+      console.log(`✅ Email sent via SMTP to ${to}: ${result.messageId}`);
+      return result;
+    }
   } catch (error) {
-    console.error(`Failed to send email to ${to}:`, error);
+    console.error(`❌ Failed to send email to ${to}`);
+    console.error(`   Error message: ${error.message}`);
+    
+    if (error.name) {
+      console.error(`   Error type: ${error.name}`);
+    }
+    
+    if (error.statusCode) {
+      console.error(`   Status code: ${error.statusCode}`);
+    }
+    
+    if (error.response) {
+      console.error(`   Response:`, error.response);
+    }
+    
+    if (error.cause) {
+      console.error(`   Cause:`, error.cause);
+    }
+    
+    // For Resend API errors, provide helpful guidance
+    if (emailService.type === 'resend') {
+      console.error(`\n📋 Troubleshooting tips for Resend API:`);
+      console.error(`   1. Check your API key is valid at https://resend.com/api-keys`);
+      console.error(`   2. Verify domain at https://resend.com/domains`);
+      console.error(`   3. For testing, use onboarding@resend.dev as sender`);
+      console.error(`   4. Check rate limits (100 emails/day on free tier)`);
+    }
+    
     throw error;
   }
 }
