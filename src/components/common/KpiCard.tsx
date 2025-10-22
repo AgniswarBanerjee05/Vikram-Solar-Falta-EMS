@@ -32,13 +32,13 @@ export const KpiCard: FC<KpiCardProps> = ({ label, value, accent = 'brand' }) =>
   return (
     <div
       className={clsx(
-        'group relative overflow-hidden rounded-3xl border bg-white/70 p-6 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-2xl hover:shadow-brand-500/20 motion-safe:animate-float-slow motion-safe:[animation-duration:18s] even:motion-safe:animate-float-delay dark:bg-slate-950/60',
+        'group relative overflow-hidden rounded-3xl border bg-white/70 p-6 transition-all duration-500 hover:-translate-y-1 hover:scale-[1.01] hover:shadow-2xl hover:shadow-brand-500/20 dark:bg-slate-950/60',
         ACCENT_SHADOW[accent]
       )}
     >
       <div
         className={clsx(
-          'absolute inset-px rounded-[26px] bg-gradient-to-br opacity-90 transition group-hover:opacity-100 bg-[length:180%_180%] motion-safe:animate-glint-slow',
+          'absolute inset-px rounded-[26px] bg-gradient-to-br opacity-90 transition group-hover:opacity-100',
           ACCENT_GRADIENT[accent]
         )}
         aria-hidden

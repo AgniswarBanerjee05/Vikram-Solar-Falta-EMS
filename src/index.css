@@ -7,8 +7,17 @@
 }
 
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
+  /* Disable smooth scrolling globally to prevent auto-scroll issues */
+  scroll-behavior: auto !important;
+  /* Disable momentum scrolling on touch devices */
+  -webkit-overflow-scrolling: auto;
+  overscroll-behavior-y: none;
+}
+
+/* Only apply smooth scrolling when explicitly requested via JS */
+html.smooth-scroll {
+  scroll-behavior: smooth !important;
 }
 
 body {
@@ -52,4 +61,13 @@ body {
 
 * {
   box-sizing: border-box;
+}
+
+/* Block WebKit autofill visual effects (defensive CSS) */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 9999s ease-out 0s, color 9999s ease-out 0s;
+  -webkit-text-fill-color: inherit !important;
 }

@@ -59,6 +59,13 @@ export function useScrollSpy(
         currentId = sectionIds[sectionIds.length - 1] ?? currentId;
       }
 
+      // Update URL hash when active section changes
+      if (currentId !== activeId) {
+        const currentPath = window.location.pathname;
+        const newUrl = `${currentPath}#${currentId}`;
+        window.history.replaceState(null, '', newUrl);
+      }
+
       setActiveId(currentId);
     };
 

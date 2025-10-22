@@ -24,6 +24,7 @@ export const Login = () => {
   const navigate = useNavigate();
   const [params] = useSearchParams();
   const [mode, setMode] = useState<LoginMode>('user');
+  // State must start empty - no storage values
   const [formState, setFormState] = useState({ email: '', password: '' });
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -56,6 +57,7 @@ export const Login = () => {
   const handleModeChange = (nextMode: LoginMode) => {
     setMode(nextMode);
     setError(null);
+    // Reset to empty - no stored values
     setFormState({ email: '', password: '' });
   };
 
@@ -252,6 +254,24 @@ export const Login = () => {
           </div>
 
           <form className="relative space-y-6" onSubmit={handleSubmit} noValidate autoComplete="off">
+            {/* Hidden decoy inputs to trap aggressive autofill */}
+            <input 
+              type="text" 
+              name="username" 
+              autoComplete="username" 
+              className="hidden h-0 w-0 opacity-0 pointer-events-none absolute" 
+              tabIndex={-1}
+              aria-hidden="true"
+            />
+            <input 
+              type="password" 
+              name="current-password" 
+              autoComplete="current-password" 
+              className="hidden h-0 w-0 opacity-0 pointer-events-none absolute" 
+              tabIndex={-1}
+              aria-hidden="true"
+            />
+
             <div className="group relative">
               <label className="mb-2 block text-left text-xs font-bold uppercase tracking-[0.3em] text-brand-300/90">
                 Email / Username
@@ -267,9 +287,10 @@ export const Login = () => {
                   name="username"
                   id={`email-${mode}`}
                   autoComplete="username"
+                  inputMode="email"
                   autoCorrect="off"
-                  autoCapitalize="off"
-                  spellCheck="false"
+                  autoCapitalize="none"
+                  spellCheck={false}
                   value={formState.email}
                   onChange={(event) =>
                     setFormState((current) => ({ ...current, email: event.target.value }))

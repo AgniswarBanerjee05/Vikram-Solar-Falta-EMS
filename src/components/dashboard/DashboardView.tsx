@@ -225,7 +225,14 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
     // For overview section, scroll to the very top of the page
     if (sectionId === 'overview') {
       window.history.pushState(null, '', `${location.pathname}#${sectionId}`);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      // Enable smooth scroll temporarily for programmatic scroll
+      document.documentElement.classList.add('smooth-scroll');
+      // Use auto behavior, let CSS class handle smoothness
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      // Remove smooth scroll class after animation
+      setTimeout(() => {
+        document.documentElement.classList.remove('smooth-scroll');
+      }, 1000);
       if (!isDesktop) {
         setSidebarOpen(false);
       }
@@ -238,7 +245,14 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
     }
     // Update URL hash to reflect current section
     window.history.pushState(null, '', `${location.pathname}#${sectionId}`);
-    element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    // Enable smooth scroll temporarily for programmatic scroll
+    document.documentElement.classList.add('smooth-scroll');
+    // Use auto behavior, let CSS class handle smoothness
+    element.scrollIntoView({ behavior: 'auto', block: 'start' });
+    // Remove smooth scroll class after animation
+    setTimeout(() => {
+      document.documentElement.classList.remove('smooth-scroll');
+    }, 1000);
     if (!isDesktop) {
       setSidebarOpen(false);
     }

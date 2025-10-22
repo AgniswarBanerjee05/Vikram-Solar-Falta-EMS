@@ -41,8 +41,7 @@ export const Sidebar: FC<SidebarProps> = ({
             href={getSectionHref('overview')}
             onClick={(event) => {
               event.preventDefault();
-              // Scroll to the very top of the page
-              window.scrollTo({ top: 0, behavior: 'smooth' });
+              // Scroll to the very top of the page - let handleNavigate manage smooth scroll
               onNavigate('overview');
             }}
             className="flex flex-1 items-center gap-3 cursor-pointer transition-transform hover:scale-105"
@@ -87,8 +86,8 @@ export const Sidebar: FC<SidebarProps> = ({
                 className={clsx(
                   'group flex items-center justify-between rounded-xl border border-transparent px-4 py-3 text-sm font-semibold uppercase tracking-wide transition-colors transition-transform',
                   isActive
-                    ? 'bg-gradient-to-r from-brand-300/55 via-brand-400/40 to-white/40 text-slate-900 shadow-[0_0_20px_rgba(14,165,233,0.45)] ring-1 ring-brand-300/70 motion-safe:animate-float-slow motion-safe:[animation-duration:14s] dark:from-brand-500/40 dark:via-brand-400/35 dark:to-transparent dark:text-white'
-                    : 'text-slate-600 hover:border-brand-300/50 hover:bg-white/75 hover:text-slate-900 motion-safe:hover:animate-float-slow motion-safe:hover:[animation-duration:12s] dark:text-slate-300 dark:hover:border-brand-300/40 dark:hover:bg-white/10 dark:hover:text-white'
+                    ? 'bg-gradient-to-r from-brand-300/55 via-brand-400/40 to-white/40 text-slate-900 shadow-[0_0_20px_rgba(14,165,233,0.45)] ring-1 ring-brand-300/70 dark:from-brand-500/40 dark:via-brand-400/35 dark:to-transparent dark:text-white'
+                    : 'text-slate-600 hover:border-brand-300/50 hover:bg-white/75 hover:text-slate-900 dark:text-slate-300 dark:hover:border-brand-300/40 dark:hover:bg-white/10 dark:hover:text-white'
                 )}
                 onClick={(event) => {
                   event.preventDefault();
