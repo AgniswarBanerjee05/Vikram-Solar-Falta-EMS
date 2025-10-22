@@ -26,8 +26,8 @@ function bootstrapSchema(db) {
       password_hash TEXT NOT NULL,
       plain_password TEXT,
       full_name TEXT,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+      created_at TEXT NOT NULL DEFAULT (datetime('now', '+5 hours', '+30 minutes')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now', '+5 hours', '+30 minutes'))
     );
 
     CREATE TABLE IF NOT EXISTS users (
@@ -38,22 +38,22 @@ function bootstrapSchema(db) {
       full_name TEXT,
       status TEXT NOT NULL DEFAULT 'ACTIVE',
       created_by INTEGER REFERENCES admins(id) ON DELETE SET NULL,
-      created_at TEXT NOT NULL DEFAULT (datetime('now')),
-      updated_at TEXT NOT NULL DEFAULT (datetime('now'))
+      created_at TEXT NOT NULL DEFAULT (datetime('now', '+5 hours', '+30 minutes')),
+      updated_at TEXT NOT NULL DEFAULT (datetime('now', '+5 hours', '+30 minutes'))
     );
 
     CREATE TRIGGER IF NOT EXISTS admins_set_updated_at
     AFTER UPDATE ON admins
     FOR EACH ROW
     BEGIN
-      UPDATE admins SET updated_at = datetime('now') WHERE id = NEW.id;
+      UPDATE admins SET updated_at = datetime('now', '+5 hours', '+30 minutes') WHERE id = NEW.id;
     END;
 
     CREATE TRIGGER IF NOT EXISTS users_set_updated_at
     AFTER UPDATE ON users
     FOR EACH ROW
     BEGIN
-      UPDATE users SET updated_at = datetime('now') WHERE id = NEW.id;
+      UPDATE users SET updated_at = datetime('now', '+5 hours', '+30 minutes') WHERE id = NEW.id;
     END;
   `);
 }

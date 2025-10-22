@@ -114,12 +114,16 @@ app.put('/api/me/password', requireUser, async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
+    console.log(`[PASSWORD CHANGE] User ${user.email} (ID: ${user.id}) attempting password change`);
     const valid = await verifyPassword(payload.currentPassword, user.password_hash);
     if (!valid) {
+      console.log(`[PASSWORD CHANGE] Invalid current password for user ${user.email}`);
       return res.status(401).json({ error: 'Invalid current password' });
     }
     const newHash = await hashPassword(payload.newPassword);
+    console.log(`[PASSWORD CHANGE] Updating password for user ${user.email} - new password: ${payload.newPassword}`);
     const updated = updateUserPassword(user.id, newHash, payload.newPassword);
+    console.log(`[PASSWORD CHANGE] Password updated successfully for user ${user.email} - plain_password stored: ${updated.plain_password}`);
     return res.json({ user: sanitizeUser(updated) });
   } catch (error) {
     if (error?.issues) {

@@ -1,6 +1,7 @@
 import { MagnifyingGlassIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
 import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Sidebar } from '../layout/Sidebar';
 import { Topbar } from '../layout/Topbar';
 import { KpiCard } from '../common/KpiCard';
@@ -35,7 +36,7 @@ const sections = [
   { id: 'overview', label: 'Overview' },
   { id: 'inventory', label: 'Meter Inventory' },
   { id: 'locations', label: 'Locations' },
-  { id: 'models', label: 'Models' }
+  { id: 'models', label: 'Panels' }
 ] as const;
 
 const meterCsvColumns: Array<CsvColumn<Meter>> = [
@@ -93,26 +94,34 @@ const sanitizeMeters = (meters: Meter[]): Meter[] => {
     }));
 };
 
-const buildLocationEntries = (summary: Record<string, unknown>): ChartEntry[] => {
-  const entries = summary?.locations as Record<string, number> | undefined;
-  if (!entries) {
-    return [];
-  }
-  return Object.entries(entries).map(([key, value]) => ({
-    label: key,
-    value
-  }));
+const buildLocationEntries = (meters: Meter[]): ChartEntry[] => {
+  const locationCounts: Record<string, number> = {};
+  
+  meters.forEach(meter => {
+    const location = meter.location?.trim();
+    if (location) {
+      locationCounts[location] = (locationCounts[location] || 0) + 1;
+    }
+  });
+  
+  return Object.entries(locationCounts)
+    .map(([key, value]) => ({ label: key, value }))
+    .sort((a, b) => b.value - a.value); // Sort by count descending
 };
 
-const buildPanelEntries = (summary: Record<string, unknown>): ChartEntry[] => {
-  const entries = summary?.panels as Record<string, number> | undefined;
-  if (!entries) {
-    return [];
-  }
-  return Object.entries(entries).map(([key, value]) => ({
-    label: key,
-    value
-  }));
+const buildPanelEntries = (meters: Meter[]): ChartEntry[] => {
+  const panelCounts: Record<string, number> = {};
+  
+  meters.forEach(meter => {
+    const panel = meter.panel_name?.trim();
+    if (panel) {
+      panelCounts[panel] = (panelCounts[panel] || 0) + 1;
+    }
+  });
+  
+  return Object.entries(panelCounts)
+    .map(([key, value]) => ({ label: key, value }))
+    .sort((a, b) => b.value - a.value); // Sort by count descending
 };
 
 const buildCsvFileName = (kind: TableKind) => {
@@ -143,11 +152,9 @@ const getNormalizedBasePath = () => {
   return base.replace(/\/+$/, '');
 };
 
-const buildSectionHref = (sectionId: string) => {
-  const basePath = getNormalizedBasePath();
-  const joined = [basePath, sectionId].filter(Boolean).join('/');
-  const candidate = joined.startsWith('/') ? joined : `/${joined}`;
-  return candidate || '/';
+const buildSectionHref = (sectionId: string, currentPath: string) => {
+  // Use hash navigation for scroll sections to update URL
+  return `${currentPath}#${sectionId}`;
 };
 
 const useIsDesktop = () => {
@@ -172,6 +179,7 @@ const useIsDesktop = () => {
 };
 
 export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardViewProps) => {
+  const location = useLocation();
   const { meters, panels, summary, loading, error } = useDashboardData();
   const { isDark, toggleTheme } = useTheme();
   const [searchTerm, setSearchTerm] = useState('');
@@ -204,8 +212,8 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
     [panels, searchTerm]
   );
 
-  const locationEntries = useMemo(() => buildLocationEntries(summary), [summary]);
-  const panelEntries = useMemo(() => buildPanelEntries(summary), [summary]);
+  const locationEntries = useMemo(() => buildLocationEntries(meters), [meters]);
+  const panelEntries = useMemo(() => buildPanelEntries(meters), [meters]);
   const rowCountDisplay = useMemo(
     () => formatRowCount(filteredMeters, filteredPanels, activeTable),
     [activeTable, filteredMeters, filteredPanels]
@@ -214,10 +222,22 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
   const activeSection = useScrollSpy(sections.map((section) => section.id));
 
   const handleNavigate = (sectionId: string) => {
+    // For overview section, scroll to the very top of the page
+    if (sectionId === 'overview') {
+      window.history.pushState(null, '', `${location.pathname}#${sectionId}`);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      if (!isDesktop) {
+        setSidebarOpen(false);
+      }
+      return;
+    }
+
     const element = document.getElementById(sectionId);
     if (!element) {
       return;
     }
+    // Update URL hash to reflect current section
+    window.history.pushState(null, '', `${location.pathname}#${sectionId}`);
     element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     if (!isDesktop) {
       setSidebarOpen(false);
@@ -243,7 +263,7 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
   const handlePasswordChange = async (currentPassword: string, newPassword: string) => {
     const session = getSession();
     if (!session?.token) {
-      throw new Error('Not authenticated');
+      throw new Error('Not authenticated - please login again');
     }
 
     try {
@@ -252,9 +272,14 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
         newPassword
       });
       alert('Password changed successfully! Admin can now see your new password.');
-    } catch (error) {
+    } catch (error: any) {
       console.error('Password change failed:', error);
-      throw error;
+      // Extract proper error message from axios error
+      const errorMessage = error?.response?.data?.error || error?.message || 'Failed to change password';
+      if (error?.response?.status === 401) {
+        throw new Error('Invalid current password or session expired. Please check your current password or login again.');
+      }
+      throw new Error(errorMessage);
     }
   };
 
@@ -271,7 +296,7 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
         activeSection={activeSection}
         onNavigate={handleNavigate}
         onToggleSidebar={() => setSidebarOpen((open) => !open)}
-        getSectionHref={buildSectionHref}
+        getSectionHref={(sectionId) => buildSectionHref(sectionId, location.pathname)}
       />
 
       {!isDesktop && sidebarOpen && (
@@ -285,7 +310,7 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
 
       <div
         className={clsx(
-          'relative z-10 flex min-h-screen flex-col overflow-x-hidden transition-[padding-left] duration-300 ease-in-out lg:pl-0',
+          'relative z-10 flex min-h-screen w-full flex-col overflow-x-hidden transition-[padding-left] duration-300 ease-in-out lg:pl-0',
           isDesktop && sidebarOpen && 'lg:pl-72'
         )}
       >
@@ -300,7 +325,10 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
           onChangePassword={role === 'user' ? () => setPasswordModalOpen(true) : undefined}
         />
 
-        <main className="mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 pb-12 pt-28 sm:px-6 lg:mx-0 lg:px-10 xl:px-14">
+        <main className={clsx(
+          'mx-auto flex w-full max-w-7xl flex-1 flex-col gap-10 px-4 pb-12 pt-28 sm:px-6',
+          isDesktop && sidebarOpen ? 'lg:mx-0 lg:px-10 xl:px-14' : 'lg:px-10 xl:px-14'
+        )}>
           <section id="overview" className="space-y-8">
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
               <KpiCard
@@ -338,9 +366,9 @@ export const DashboardView = ({ role, onLogout, onManageAccounts }: DashboardVie
                   accent="emerald"
                 />
                 <KpiCard
-                  label="Comm Ports - NO"
+                  label="Comm Ports - RS485"
                   value={
-                    loading ? 'Loading...' : formatNumber(summary.comm_ports?.NO ?? summary.comm_ports?.No ?? 0)
+                    loading ? 'Loading...' : formatNumber(summary.comm_ports?.RS485 ?? 0)
                   }
                   accent="amber"
                 />

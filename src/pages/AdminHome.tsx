@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DashboardView } from '../components/dashboard/DashboardView';
 import { AdminUserManagement } from './AdminUserManagement';
 import { getSession, logout } from '../auth/session';
@@ -9,7 +9,12 @@ type AdminView = 'dashboard' | 'accounts';
 
 export const AdminHome = () => {
   const navigate = useNavigate();
-  const [activeView, setActiveView] = useState<AdminView>('dashboard');
+  const [searchParams, setSearchParams] = useSearchParams();
+  const viewParam = searchParams.get('view') as AdminView | null;
+  const modeParam = searchParams.get('mode'); // Check for mode parameter from AdminUserManagement
+  const [activeView, setActiveView] = useState<AdminView>(
+    viewParam === 'accounts' || modeParam ? 'accounts' : 'dashboard'
+  );
 
   useEffect(() => {
     const session = getSession();
@@ -22,6 +27,17 @@ export const AdminHome = () => {
     }
   }, []);
 
+  const handleViewChange = (view: AdminView) => {
+    setActiveView(view);
+    if (view === 'accounts') {
+      // Preserve mode parameter if it exists
+      const mode = searchParams.get('mode');
+      setSearchParams(mode ? { view, mode } : { view });
+    } else {
+      setSearchParams({ view });
+    }
+  };
+
   const handleLogout = () => {
     logout(navigate);
   };
@@ -32,12 +48,12 @@ export const AdminHome = () => {
         <DashboardView
           role="admin"
           onLogout={handleLogout}
-          onManageAccounts={() => setActiveView('accounts')}
+          onManageAccounts={() => handleViewChange('accounts')}
         />
       ) : (
         <AdminUserManagement
           onDashboardLogout={handleLogout}
-          onBackToDashboard={() => setActiveView('dashboard')}
+          onBackToDashboard={() => handleViewChange('dashboard')}
         />
       )}
     </>

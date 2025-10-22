@@ -41,9 +41,11 @@ export const Sidebar: FC<SidebarProps> = ({
             href={getSectionHref('overview')}
             onClick={(event) => {
               event.preventDefault();
+              // Scroll to the very top of the page
+              window.scrollTo({ top: 0, behavior: 'smooth' });
               onNavigate('overview');
             }}
-            className="flex flex-1 items-center gap-3"
+            className="flex flex-1 items-center gap-3 cursor-pointer transition-transform hover:scale-105"
           >
             <img
               src={`${import.meta.env.BASE_URL}images/vikram-solar-logo.png`}

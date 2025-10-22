@@ -38,25 +38,65 @@ const config: Config = {
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-8px)' }
+          '50%': { transform: 'translateY(-20px)' }
         },
         'pulse-ring': {
-          '0%': { boxShadow: '0 0 0 0 rgba(14, 165, 233, 0.45)' },
-          '70%': { boxShadow: '0 0 0 18px rgba(14, 165, 233, 0)' },
-          '100%': { boxShadow: '0 0 0 0 rgba(14, 165, 233, 0)' }
+          '0%': { 
+            transform: 'scale(0.8)',
+            opacity: '1'
+          },
+          '50%': {
+            transform: 'scale(1.2)',
+            opacity: '0.5'
+          },
+          '100%': { 
+            transform: 'scale(1.5)',
+            opacity: '0'
+          }
         },
         glint: {
           '0%, 100%': { backgroundPosition: '0% 50%' },
           '50%': { backgroundPosition: '100% 50%' }
+        },
+        shimmer: {
+          '0%': { backgroundPosition: '-200% 0' },
+          '100%': { backgroundPosition: '200% 0' }
+        },
+        shine: {
+          '0%': { transform: 'translateX(-100%) translateY(-100%) rotate(30deg)' },
+          '100%': { transform: 'translateX(100%) translateY(100%) rotate(30deg)' }
+        },
+        'fade-in-up': {
+          '0%': { opacity: '0', transform: 'translateY(20px)' },
+          '100%': { opacity: '1', transform: 'translateY(0)' }
+        },
+        'pulse-slow': {
+          '0%, 100%': { opacity: '0.6' },
+          '50%': { opacity: '0.9' }
+        },
+        'grid-flow': {
+          '0%': { transform: 'translateY(0)' },
+          '100%': { transform: 'translateY(4rem)' }
+        },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '10%, 30%, 50%, 70%, 90%': { transform: 'translateX(-2px)' },
+          '20%, 40%, 60%, 80%': { transform: 'translateX(2px)' }
         }
       },
       animation: {
         'aurora-slow': 'aurora 22s ease-in-out infinite',
         'aurora-reverse': 'aurora-reverse 28s ease-in-out infinite',
+        'float': 'float 6s ease-in-out infinite',
         'float-slow': 'float 14s ease-in-out infinite',
         'float-delay': 'float 16s ease-in-out infinite 1.2s',
         'pulse-ring': 'pulse-ring 3.6s ease-out infinite',
-        'glint-slow': 'glint 18s linear infinite'
+        'glint-slow': 'glint 18s linear infinite',
+        'shimmer': 'shimmer 3s linear infinite',
+        'shine': 'shine 8s ease-in-out infinite',
+        'fade-in-up': 'fade-in-up 0.6s ease-out',
+        'pulse-slow': 'pulse-slow 4s ease-in-out infinite',
+        'shake': 'shake 0.5s ease-in-out'
       }
     }
   },

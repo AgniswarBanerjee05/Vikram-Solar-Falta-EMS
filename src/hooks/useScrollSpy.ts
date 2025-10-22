@@ -34,6 +34,14 @@ export function useScrollSpy(
 
     const handleScroll = () => {
       const scrollPosition = getScrollPosition() + offset;
+      const windowHeight = container ? container.clientHeight : window.innerHeight;
+      const documentHeight = container 
+        ? container.scrollHeight 
+        : document.documentElement.scrollHeight;
+      
+      // Check if we're near the bottom of the page
+      const isNearBottom = scrollPosition + windowHeight >= documentHeight - 50;
+      
       let currentId = sectionIds[0] ?? '';
 
       for (const id of sectionIds) {
@@ -44,6 +52,11 @@ export function useScrollSpy(
         if (getElementTop(element) <= scrollPosition) {
           currentId = id;
         }
+      }
+
+      // If we're near the bottom, activate the last section
+      if (isNearBottom && sectionIds.length > 0) {
+        currentId = sectionIds[sectionIds.length - 1] ?? currentId;
       }
 
       setActiveId(currentId);

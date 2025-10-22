@@ -85,8 +85,12 @@ function updateUser({ id, email, fullName, status }) {
 
 function updateUserPassword(id, passwordHash, plainPassword = null) {
   const db = getDb();
-  db.prepare(`UPDATE users SET password_hash = ?, plain_password = ? WHERE id = ?`).run(passwordHash, plainPassword, id);
-  return findUserById(id);
+  console.log(`[REPO] Updating password for user ID ${id} - plain_password: ${plainPassword}`);
+  const result = db.prepare(`UPDATE users SET password_hash = ?, plain_password = ? WHERE id = ?`).run(passwordHash, plainPassword, id);
+  console.log(`[REPO] Update result: ${result.changes} rows changed`);
+  const updated = findUserById(id);
+  console.log(`[REPO] Updated user plain_password: ${updated?.plain_password}`);
+  return updated;
 }
 
 function updateAdmin({ id, email, fullName }) {

@@ -15,6 +15,7 @@
     "@heroicons/react": "^2.1.5",
     "axios": "^1.12.2",
     "chart.js": "^4.4.4",
+    "chartjs-plugin-zoom": "^2.2.0",
     "clsx": "^2.1.1",
     "dotenv": "^17.2.3",
     "papaparse": "^5.5.3",

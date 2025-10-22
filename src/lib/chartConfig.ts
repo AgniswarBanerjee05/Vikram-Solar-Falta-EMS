@@ -8,8 +8,9 @@ import {
   LinearScale,
   Tooltip
 } from 'chart.js';
+import zoomPlugin from 'chartjs-plugin-zoom';
 
-Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Filler);
+Chart.register(ArcElement, BarElement, CategoryScale, LinearScale, Tooltip, Legend, Filler, zoomPlugin);
 
 const PALETTE = [
   '#38bdf8',
@@ -51,6 +52,22 @@ export function buildDoughnutOptions(isDark: boolean) {
             return `${context.label}: ${value} (${percentage}%)`;
           }
         }
+      },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: 'xy' as const
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+            speed: 0.1
+          },
+          pinch: {
+            enabled: true
+          },
+          mode: 'xy' as const
+        }
       }
     }
   };
@@ -90,6 +107,22 @@ export function buildHorizontalBarOptions(isDark: boolean) {
             return items[0]?.label ?? '';
           }
         }
+      },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: 'xy' as const
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+            speed: 0.1
+          },
+          pinch: {
+            enabled: true
+          },
+          mode: 'xy' as const
+        }
       }
     }
   };
@@ -121,6 +154,22 @@ export function buildVerticalBarOptions(isDark: boolean) {
     plugins: {
       legend: {
         display: false
+      },
+      zoom: {
+        pan: {
+          enabled: true,
+          mode: 'xy' as const
+        },
+        zoom: {
+          wheel: {
+            enabled: true,
+            speed: 0.1
+          },
+          pinch: {
+            enabled: true
+          },
+          mode: 'xy' as const
+        }
       }
     }
   };

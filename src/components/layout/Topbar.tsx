@@ -32,7 +32,10 @@ export const Topbar: FC<TopbarProps> = ({
       "fixed right-0 top-0 z-30 border-b border-white/10 bg-gradient-to-r from-white/80 via-white/50 to-white/80 bg-[length:160%_160%] backdrop-blur-2xl transition-all duration-300 motion-safe:animate-glint-slow dark:border-white/5 dark:from-slate-950/70 dark:via-slate-900/55 dark:to-slate-950/70",
       isSidebarOpen ? "left-0 lg:left-72" : "left-0"
     )}>
-      <div className="mx-auto flex w-full max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6 lg:mx-0 lg:flex-nowrap lg:justify-between lg:px-10 xl:px-12">
+      <div className={clsx(
+        "mx-auto flex w-full max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6 lg:flex-nowrap lg:justify-between lg:px-10 xl:px-14",
+        isSidebarOpen ? "lg:mx-0" : ""
+      )}>
         <div className="flex min-w-0 flex-1 items-center gap-3">
           {!isSidebarOpen && (
             <button

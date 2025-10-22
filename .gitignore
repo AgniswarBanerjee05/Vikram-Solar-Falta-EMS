@@ -2,3 +2,15 @@ node_modules/
 dist/
 .venv/
 __pycache__/
+
+# Security - Never commit these files
+.env
+.env.local
+.env.production
+.env.secure
+backend/.env
+backend/.env.secure
+*.key
+*.pem
+*.p12
+secrets/
