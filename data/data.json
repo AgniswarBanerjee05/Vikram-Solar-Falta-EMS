@@ -1270,15 +1270,18 @@
   "summary": {
     "total_meters": 80,
     "new_meters_required": 9,
+    "total_panels": 45,
+    "total_capacity_kva": 1250,
+    "active_meters": 79,
     "comm_ports": {
       "YES": 52,
-      "NO": 0
+      "RS485": 27
     },
     "models": {
       "Secure": 1,
       "Schneider EM 6400": 4,
-      "Schneider EM 1200": 72,
-      "Schneider EM 6400NG": 2
+      "Schneider EM 6400NG": 2,
+      "Schneider EM 1200": 72
     }
   }
 }
