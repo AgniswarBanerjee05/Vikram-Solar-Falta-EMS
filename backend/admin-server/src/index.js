@@ -39,10 +39,6 @@ const {
   userUpdateSchema,
   userPasswordResetSchema
 } = require('../../shared/validators');
-const {
-  sendAdminCreationEmail,
-  sendUserCreationEmail
-} = require('../../shared/email');
 
 const PORT = process.env.ADMIN_SERVER_PORT || 4000;
 const ADMIN_REGISTRATION_KEY = process.env.ADMIN_REGISTRATION_KEY;
@@ -145,15 +141,6 @@ app.post('/api/admin/register', async (req, res) => {
       role: 'admin'
     });
     
-    // Send confirmation email asynchronously (don't block response)
-    sendAdminCreationEmail({
-      email: admin.email,
-      fullName: admin.full_name,
-      password: payload.password
-    }).catch(err => {
-      console.error('Failed to send admin creation email:', err);
-    });
-    
     return res.status(201).json({
       admin: sanitizeAdmin(admin),
       token
@@ -227,16 +214,6 @@ app.post('/api/users', requireAuth, async (req, res) => {
       fullName: payload.fullName,
       status: payload.status ?? 'ACTIVE',
       createdBy: req.admin.id
-    });
-    
-    // Send confirmation email asynchronously (don't block response)
-    sendUserCreationEmail({
-      email: user.email,
-      fullName: user.full_name,
-      password: rawPassword,
-      isAdmin: false
-    }).catch(err => {
-      console.error('Failed to send user creation email:', err);
     });
     
     return res.status(201).json({
