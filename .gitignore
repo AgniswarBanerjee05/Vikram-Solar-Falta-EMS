@@ -14,3 +14,4 @@ backend/.env.secure
 *.pem
 *.p12
 secrets/
+jwt-secret.txt
