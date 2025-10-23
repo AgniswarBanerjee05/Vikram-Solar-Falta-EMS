@@ -4,10 +4,12 @@
   "private": true,
   "type": "commonjs",
   "dependencies": {
+    "@getbrevo/brevo": "^3.0.1",
     "bcryptjs": "^2.4.3",
     "better-sqlite3": "^9.4.3",
+    "helmet": "^8.0.0",
     "jsonwebtoken": "^9.0.2",
-    "nodemailer": "^7.0.9",
+    "nodemailer": "^7.0.10",
     "resend": "^6.2.2",
     "zod": "^3.23.8"
   }

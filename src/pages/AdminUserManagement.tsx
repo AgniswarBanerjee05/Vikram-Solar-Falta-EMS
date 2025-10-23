@@ -100,7 +100,6 @@ export const AdminUserManagement = ({
   const [email, setEmail] = useState('');
   const [fullName, setFullName] = useState('');
   const [password, setPassword] = useState('');
-  const [status, setStatus] = useState<'ACTIVE' | 'DISABLED'>('ACTIVE');
   const [saving, setSaving] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
 
@@ -134,6 +133,26 @@ export const AdminUserManagement = ({
   useEffect(() => {
     void fetchAccounts();
   }, [adminToken, viewMode]);
+
+  // Sync viewMode with URL params
+  useEffect(() => {
+    const mode = searchParams.get('mode');
+    if (mode === 'create' || mode === 'existing') {
+      setViewMode(mode);
+    } else {
+      setViewMode('landing');
+    }
+  }, [searchParams]);
+
+  // Auto-dismiss feedback after 10 seconds
+  useEffect(() => {
+    if (feedback) {
+      const timer = setTimeout(() => {
+        setFeedback(null);
+      }, 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [feedback]);
 
   const sortedUsers = useMemo(() => {
     const usersWithRole = users.map(u => ({ ...u, accountRole: 'user' as const }));
@@ -175,7 +194,6 @@ export const AdminUserManagement = ({
     setEmail('');
     setFullName('');
     setPassword('');
-    setStatus('ACTIVE');
     setRole('user');
   };
 
@@ -208,8 +226,7 @@ export const AdminUserManagement = ({
         const result = await createUser(adminToken, {
           email: email.trim(),
           fullName: fullName.trim(),
-          password: password.trim() || undefined,
-          status
+          password: password.trim() || undefined
         });
         setUsers((current) => [result.user, ...current]);
         setFeedback(
@@ -387,6 +404,29 @@ export const AdminUserManagement = ({
         </div>
       </header>
 
+      {/* Feedback Message - Fixed at top */}
+      {feedback && (
+        <div className="fixed left-1/2 top-20 z-50 w-[calc(100%-2rem)] max-w-2xl -translate-x-1/2 transform animate-in fade-in slide-in-from-top-4 duration-300 sm:top-24 sm:w-auto">
+          <div className="rounded-2xl border border-emerald-400/40 bg-emerald-500/20 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-emerald-100 shadow-xl backdrop-blur sm:rounded-3xl sm:px-6 sm:py-4 sm:text-xs sm:tracking-[0.25em]">
+            <div className="flex items-center gap-3">
+              <svg className="h-4 w-4 flex-shrink-0 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+              </svg>
+              <span className="flex-1">{feedback}</span>
+              <button
+                type="button"
+                onClick={() => setFeedback(null)}
+                className="flex-shrink-0 opacity-70 transition hover:opacity-100"
+              >
+                <svg className="h-4 w-4 sm:h-5 sm:w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Main Content */}
       <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-6 px-4 pb-12 pt-24 sm:gap-8 sm:px-6 sm:pb-16 sm:pt-28 lg:px-8 lg:pb-20">
         
@@ -550,19 +590,6 @@ export const AdminUserManagement = ({
                     required
                   />
                 </label>
-                {role === 'user' && (
-                  <label className="block text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-300 sm:text-xs sm:tracking-[0.3em]">
-                    Status
-                    <select
-                      value={status}
-                      onChange={(event) => setStatus(event.target.value as 'ACTIVE' | 'DISABLED')}
-                      className="mt-1.5 w-full rounded-xl border border-white/10 bg-white/10 px-3 py-2.5 text-xs font-medium text-slate-100 outline-none transition focus:border-brand-300 focus:ring-2 focus:ring-brand-300/60 sm:mt-2 sm:rounded-2xl sm:px-4 sm:py-3 sm:text-sm"
-                    >
-                      <option value="ACTIVE">Active</option>
-                      <option value="DISABLED">Disabled</option>
-                    </select>
-                  </label>
-                )}
                 <label className="block text-[10px] font-semibold uppercase tracking-[0.25em] text-slate-300 sm:text-xs sm:tracking-[0.3em]">
                   {role === 'admin' ? 'Password (required for admins)' : 'Password (optional)'}
                   <input
@@ -752,12 +779,6 @@ export const AdminUserManagement = ({
               </div>
             </div>
           </section>
-        )}
-
-        {feedback && (
-          <div className="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-slate-200 backdrop-blur sm:rounded-3xl sm:px-6 sm:py-4 sm:text-xs sm:tracking-[0.25em]">
-            {feedback}
-          </div>
         )}
       </div>
     </div>

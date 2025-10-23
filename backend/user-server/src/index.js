@@ -20,12 +20,23 @@ const {
   verifyPassword,
   hashPassword,
   generateToken,
-  verifyToken
+  verifyToken,
+  clearRateLimit
 } = require('../../shared/security');
 const {
   userLoginSchema,
   userChangePasswordSchema
 } = require('../../shared/validators');
+const {
+  securityHeaders,
+  rateLimitMiddleware,
+  authRateLimitMiddleware,
+  sanitizeInputMiddleware,
+  validateContentType,
+  requestSizeLimit,
+  securityLogger,
+  secureCORS
+} = require('../../shared/securityMiddleware');
 
 const PORT = process.env.USER_SERVER_PORT || 5000;
 
@@ -33,30 +44,32 @@ getDb();
 
 const app = express();
 
-// CORS configuration - allow both local development and production
-const corsOptions = {
-  origin: function (origin, callback) {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
-    
-    const allowedOrigins = [
-      'http://localhost:5173',
-      'http://localhost:3000',
-      'https://agniswarbanerjee05.github.io'
-    ];
-    
-    if (allowedOrigins.some(allowed => origin.startsWith(allowed))) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
-  optionsSuccessStatus: 200
-};
+// Security middleware - must be applied first
+app.use(securityHeaders());
+app.use(securityLogger);
 
-app.use(cors(corsOptions));
-app.use(express.json());
+// Request size limiting (100KB max)
+app.use(requestSizeLimit(100));
+
+// Secure CORS configuration
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:3000',
+  'https://agniswarbanerjee05.github.io'
+];
+app.use(secureCORS(allowedOrigins));
+
+// JSON body parser with limit
+app.use(express.json({ limit: '100kb' }));
+
+// Content-Type validation for POST/PUT requests
+app.use(validateContentType);
+
+// Input sanitization (protects against XSS)
+app.use(sanitizeInputMiddleware);
+
+// Global rate limiting (100 requests per 15 minutes per IP)
+app.use(rateLimitMiddleware(100, 15 * 60 * 1000));
 
 function sanitizeUser(user) {
   if (!user) return null;
@@ -86,7 +99,7 @@ app.get('/health', (req, res) => {
   res.json({ status: 'ok', service: 'user-server' });
 });
 
-app.post('/api/login', async (req, res) => {
+app.post('/api/login', authRateLimitMiddleware(5, 15 * 60 * 1000), async (req, res) => {
   try {
     const payload = userLoginSchema.parse(req.body);
     
@@ -104,6 +117,11 @@ app.post('/api/login', async (req, res) => {
     if (!valid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+    
+    // Clear rate limit on successful login
+    const ip = req.ip || req.connection.remoteAddress || 'unknown';
+    clearRateLimit(`auth:${payload.email}:${ip}`);
+    
     const token = generateToken(
       { sub: user.id, email: user.email, role: 'user' },
       { expiresIn: '4h' }

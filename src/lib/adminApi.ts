@@ -22,7 +22,6 @@ export interface CreateUserPayload {
   email: string;
   fullName?: string;
   password?: string;
-  status?: 'ACTIVE' | 'DISABLED';
 }
 
 export interface UpdateUserPayload {

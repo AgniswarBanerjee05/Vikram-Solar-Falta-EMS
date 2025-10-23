@@ -16,8 +16,7 @@ const adminLoginSchema = z.object({
 const userCreationSchema = z.object({
   email: emailSchema,
   fullName: z.string().trim().min(1).optional(),
-  password: z.string().min(8).optional(),
-  status: z.enum(['ACTIVE', 'DISABLED']).optional()
+  password: z.string().min(8).optional()
 });
 
 const userUpdateSchema = z.object({
